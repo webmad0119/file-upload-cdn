@@ -1,4 +1,4 @@
-# file-upload-cdn
+# file-upload-no-cdn
 
 Run it via `npm install` and then `npm run dev`
 
