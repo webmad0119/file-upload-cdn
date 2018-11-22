@@ -4,9 +4,12 @@ const Movie = require('../models/movie.js');
 const uploadCloud = require('../config/cloudinary.js');
 const router = express.Router();
 
+//we show all the images, in this case, movie images
 router.get('/', (req, res, next) => {
+  //we obtain all the movies from the mongodb and then we pass them to the view
   Movie.find()
   .then((movies) => {
+    //passing movies to the index view
     res.render('index', { movies });
   })
   .catch((error) => {
@@ -14,15 +17,19 @@ router.get('/', (req, res, next) => {
   })
 });
 
+//here we render the image addition form
 router.get('/movie/add', (req, res, next) => {
   res.render('movie-add');
 });
 
+//actual write to cloudinary via the middleware specified in ../config/cloudinary.js
 router.post('/movie/add', uploadCloud.single('photo'), (req, res, next) => {
+  //write preparation, extracting the values send via the form
   const { title, description } = req.body;
   const imgPath = req.file.url;
   const imgName = req.file.originalname;
   const newMovie = new Movie({title, description, imgPath, imgName})
+  //actual write in mongo using mongoose
   newMovie.save()
   .then(movie => {
     res.redirect('/');
